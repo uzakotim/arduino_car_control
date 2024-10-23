@@ -1,22 +1,26 @@
-// Pin assignments for relays
-const int relayDirection = 8;    // Relay 1 for controlling direction
-const int relayPower = 9;        // Relay 2 for controlling power (on/off)
+// Первый реле замыкает направление мотора (UP DOWN)
+// Второй реле замыкает питание мотора(PWR GRND)
+
+
+// Пины двух реле
+const int relayDirection = 8;    // Relay 1 для контроля направления
+const int relayPower = 9;        // Relay 2 для контроля питания (on/off)
 
 void setup() {
-  // Initialize the relay pins as outputs
+  // Инициализация реле
   pinMode(relayDirection, OUTPUT);
   pinMode(relayPower, OUTPUT);
   
-  // Ensure both relays are off at startup
+  // Убедитесь что реле выключены во время стартапа
   digitalWrite(relayDirection, LOW);
   digitalWrite(relayPower, LOW);
 
-  // Initialize serial communication
+  // Инициализация сериал
   Serial.begin(9600);
 }
 
 void loop() {
-  // Read serial commands
+  // Считывание комманд (кнопок) с компьютера
   if (Serial.available() > 0) {
     char command = Serial.read();
     handleSerialCommand(command);
@@ -25,13 +29,13 @@ void loop() {
 
 void handleSerialCommand(char command) {
   switch (command) {
-    case 'u':   // Command to raise the window
+    case 'u':   // Комманда поднятия окна
       raiseWindow();
       break;
-    case 'd':   // Command to lower the window
+    case 'd':   // Комманда опускания окна
       lowerWindow();
       break;
-    case 's':   // Command to stop the window
+    case 's':   // Комманда остановки окна
       stopWindow();
       break;
     default:
@@ -40,25 +44,25 @@ void handleSerialCommand(char command) {
 }
 
 void raiseWindow() {
-  // Set direction for raising window (Relay 1: LOW for one direction)
+  // Установить направление для поднятия окна (Реле 1: LOW для одного направления)
   digitalWrite(relayDirection, LOW);
 
-  // Turn on power (Relay 2: ON)
+  // Включить питание (Реле 2: ВКЛ)
   digitalWrite(relayPower, HIGH);
-  Serial.println("Raising window...");
+  Serial.println("Поднимаю окно...");
 }
 
 void lowerWindow() {
-  // Set direction for lowering window (Relay 1: HIGH for opposite direction)
+  // Установить направление для опускания окна (Реле 1: HIGH для противоположного направления)
   digitalWrite(relayDirection, HIGH);
 
-  // Turn on power (Relay 2: ON)
+  // Включить питание (Реле 2: ВКЛ)
   digitalWrite(relayPower, HIGH);
-  Serial.println("Lowering window...");
+  Serial.println("Опускаю окно...");
 }
 
 void stopWindow() {
-  // Turn off power to the motor (Relay 2: OFF)
+  // Отключить питание двигателя (Реле 2: ВЫКЛ)
   digitalWrite(relayPower, LOW);
-  Serial.println("Window stopped.");
+  Serial.println("Окно остановлено.");
 }
