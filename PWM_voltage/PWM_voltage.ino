@@ -1,6 +1,6 @@
 const int transistorPin = 9;
 int dutyCycle = 50;
-int period = 1000;
+int period = 5000;
 void setup() {
   // put your setup code here, to run once:
   pinMode(transistorPin, OUTPUT);
