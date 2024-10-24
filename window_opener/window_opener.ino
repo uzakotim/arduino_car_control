@@ -1,19 +1,15 @@
-// Первый реле замыкает направление мотора (UP DOWN)
-// Второй реле замыкает питание мотора(PWR GRND)
-
-
 // Пины двух реле
-const int relayDirection = 8;    // Relay 1 для контроля направления
-const int relayPower = 9;        // Relay 2 для контроля питания (on/off)
+const int relayA = 8;    
+const int relayB = 9;   
 
 void setup() {
   // Инициализация реле
-  pinMode(relayDirection, OUTPUT);
-  pinMode(relayPower, OUTPUT);
+  pinMode(relayA, OUTPUT);
+  pinMode(relayB, OUTPUT);
   
   // Убедитесь что реле выключены во время стартапа
-  digitalWrite(relayDirection, LOW);
-  digitalWrite(relayPower, LOW);
+  digitalWrite(relayA, LOW);
+  digitalWrite(relayB, LOW);
 
   // Инициализация сериал
   Serial.begin(9600);
@@ -45,24 +41,21 @@ void handleSerialCommand(char command) {
 
 void raiseWindow() {
   // Установить направление для поднятия окна (Реле 1: LOW для одного направления)
-  digitalWrite(relayDirection, LOW);
-
-  // Включить питание (Реле 2: ВКЛ)
-  digitalWrite(relayPower, HIGH);
+  digitalWrite(relayA, LOW);
+  digitalWrite(relayB, HIGH);
   Serial.println("Поднимаю окно...");
 }
 
 void lowerWindow() {
   // Установить направление для опускания окна (Реле 1: HIGH для противоположного направления)
-  digitalWrite(relayDirection, HIGH);
-
-  // Включить питание (Реле 2: ВКЛ)
-  digitalWrite(relayPower, HIGH);
+  digitalWrite(relayA, HIGH);
+  digitalWrite(relayB, LOW);
   Serial.println("Опускаю окно...");
 }
 
 void stopWindow() {
-  // Отключить питание двигателя (Реле 2: ВЫКЛ)
-  digitalWrite(relayPower, LOW);
+  // Отключить питание двигателя (Реле 1,2: ВЫКЛ)
+  digitalWrite(relayA, LOW);
+  digitalWrite(relayB, LOW);
   Serial.println("Окно остановлено.");
 }
