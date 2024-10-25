@@ -1,8 +1,13 @@
 // Пины двух реле
 const int relayA = 8;    
 const int relayB = 9;   
+const int transistorPin = 10;
+int dutyCycle = 50;
+int period = 5000;
 
 void setup() {
+  // Инициалищация ШИМ
+  pinMode(transistorPin, OUTPUT);
   // Инициализация реле
   pinMode(relayA, OUTPUT);
   pinMode(relayB, OUTPUT);
@@ -21,6 +26,10 @@ void loop() {
     char command = Serial.read();
     handleSerialCommand(command);
   }
+  digitalWrite(transistorPin, HIGH);
+  delay(dutyCycle * period / 100);
+  digitalWrite(transistorPin, LOW);
+  delay((100-dutyCycle) * period / 100);
 }
 
 void handleSerialCommand(char command) {
