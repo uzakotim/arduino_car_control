@@ -2,8 +2,8 @@
 const int relayA = 8;    
 const int relayB = 9;   
 const int transistorPin = 10;
-int dutyCycle = 30;
-int period = 5000;
+int dutyCycle = 50;
+int period = 10000;
 unsigned long previousMillis1 = 0;
 unsigned long previousMillis2 = 0;
 
@@ -27,17 +27,6 @@ void loop() {
   if (Serial.available() > 0) {
     char command = Serial.read();
     handleSerialCommand(command);
-  }
-
-  // Task 2: Duty Cycle PWM Control (non-blocking)
-  unsigned long currentMillis = millis();
-  if (currentMillis - previousMillis1 >= dutyCycle * period / 100) {
-    previousMillis1 = currentMillis;
-    digitalWrite(transistorPin, HIGH);
-  }
-  if (currentMillis - previousMillis2 >= (100 - dutyCycle) * period / 100) {
-    previousMillis2 = currentMillis;
-    digitalWrite(transistorPin, LOW);
   }
 }
 
