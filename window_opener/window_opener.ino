@@ -3,7 +3,7 @@ const int relayA = 8;
 const int relayB = 9;   
 const int transistorPin = 10;
 int dutyCycle = 50;
-int period = 10000;
+int period = 1000;
 unsigned long previousMillis1 = 0;
 unsigned long previousMillis2 = 0;
 
@@ -23,14 +23,11 @@ void setup() {
 }
 
 void loop() {
-  // Task 1: Serial Command Handling (no delay)
   if (Serial.available() > 0) {
     char command = Serial.read();
     handleSerialCommand(command);
   }
 }
-
-
 
 void handleSerialCommand(char command) {
   switch (command) {
