@@ -1,12 +1,11 @@
 // Пины двух реле
 const int relayA = 8;    
 const int relayB = 9;   
-const int transistorPin = 10;
-int dutyCycle = 50;
-int period = 1000;
-unsigned long previousMillis1 = 0;
-unsigned long previousMillis2 = 0;
-
+const int transistorPin = 13;
+int dutyCycle = 10; 
+int period = 100; 
+unsigned long previousMicros1 = 0;
+unsigned long previousMicros2 = 0;
 void setup() {
   // Инициалищация ШИМ
   pinMode(transistorPin, OUTPUT);
@@ -23,9 +22,21 @@ void setup() {
 }
 
 void loop() {
+
+  // Комманда с компьютера
   if (Serial.available() > 0) {
     char command = Serial.read();
     handleSerialCommand(command);
+  }
+  // ШИМ Контроль (не-блокирующий)
+  unsigned long currentMicros = micros();
+  if (currentMicros - previousMicros1 >= dutyCycle * period / 100) {
+    previousMicros1 = currentMicros;
+    digitalWrite(transistorPin, HIGH);
+  }
+  if (currentMicros - previousMicros2 >= (100 - dutyCycle) * period / 100) {
+    previousMicros2 = currentMicros;
+    digitalWrite(transistorPin, LOW);
   }
 }
 
