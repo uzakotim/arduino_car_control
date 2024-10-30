@@ -68,14 +68,18 @@ void loop() {
 void handleSerialCommand(char command) {
   switch (command) {
     case 'u':   // Комманда поднятия окна
-      stopWindow();
-      delay(100);
+      if (prev_command == 'd'){
+        stopWindow();
+        delay(100);
+      }
       raiseWindow();
       prev_command = 'u';
       break;
     case 'd':   // Комманда опускания окна
-      stopWindow();
-      delay(100);
+      if (prev_command == 'u'){
+        stopWindow();
+        delay(100);
+      }
       lowerWindow();
       prev_command = 'd';
       break;
