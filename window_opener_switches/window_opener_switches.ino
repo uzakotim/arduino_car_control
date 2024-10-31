@@ -17,8 +17,8 @@ void setup() {
   // Убедитесь что реле выключены во время стартапа
   digitalWrite(relayA, LOW);
   digitalWrite(relayB, LOW);
-
   Serial.begin(9600);
+
 }
 
 void loop() {
@@ -29,6 +29,7 @@ void loop() {
   if (Serial.available() > 0)
   {
     command = Serial.read();
+    Serial.println(command);
     handleSerialCommand(command);
   }
 
