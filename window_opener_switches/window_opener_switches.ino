@@ -2,15 +2,24 @@ const int downSwitchPin = 10;
 const int upSwitchPin = 11;
 const int relayA = 8;    
 const int relayB = 9;  
+const int currentSensorPin = A0;
+
+
 int stateUP = 0;
 int stateDOWN = 0;
 char command = 's';
 char prev_command = 's'; 
+const float MAX_CURRENT = 30.0; //Amps
+float current = 0.0;
+float voltage = 0.0;
+float nominal_current = 0.0;
+int DELAY_OBSTACLE_LOWERING_WINDOW = 300;
 
 void setup() {
   // put your setup code here, to run once:
   pinMode(downSwitchPin, INPUT);
   pinMode(upSwitchPin, INPUT);
+  pinMode(currentSensorPin, INPUT);
   // Инициализация реле
   pinMode(relayA, OUTPUT);
   pinMode(relayB, OUTPUT);
@@ -25,12 +34,25 @@ void loop() {
   // put your main code here, to run repeatedly:
   stateDOWN = digitalRead(downSwitchPin);
   stateUP = digitalRead(upSwitchPin);
+  // Считывание силы тока
+  voltage = analogRead(currentSensorPin);
+  current = (voltage/ 1024.0) * MAX_CURRENT;  
   // Комманда с компьютера
   if (Serial.available() > 0)
   {
     command = Serial.read();
     Serial.println(command);
     handleSerialCommand(command);
+    if ((prev_command == "u") || (prev_command == "d")){
+      nominal_current = current;
+    }
+  }
+  if (abs(current) > (abs(nominal_current) + 2.0)){
+    Serial.println("Препядствие!!!");
+    stopWindow();
+    delay(100);
+    lowerWindow();
+    delay(DELAY_OBSTACLE_LOWERING_WINDOW);
   }
 
   if ((stateDOWN == 0) && (stateUP == 1)){
