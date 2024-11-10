@@ -64,6 +64,7 @@ void loop() {
     // delay(100);
     // lowerWindow();
     // delay(DELAY_OBSTACLE_LOWERING_WINDOW);
+    // stopWindow();
   // }
 // ------------------
   if ((stateDOWN == 0) && (stateUP == 1)){
