@@ -42,7 +42,7 @@ void loop() {
   stateUP = digitalRead(upSwitchPin);
   // Считывание силы тока
   voltage = analogRead(currentSensorPin);
-  current = (voltage/ 1024.0) * MAX_CURRENT;
+  current = voltage * MAX_CURRENT / 1024.0;
   addCurrentReading(current);
   for (int i=0;i<WINDOW_SIZE;i++){
     Serial.print(current_readings[i]); 
