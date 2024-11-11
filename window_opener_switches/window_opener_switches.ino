@@ -58,7 +58,7 @@ void loop() {
   Serial.print(current);
   Serial.println();
 // FAILURE DETECTION 
-  if (nominal_current - current >= 0.1){
+  if (nominal_current - current >= 0.2){
     Serial.println("Препядствие!!!");
     stopWindow();
     delay(100);
