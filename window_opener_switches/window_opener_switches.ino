@@ -13,8 +13,8 @@ int stateDOWN = 0;
 int counter = 0;
 float current = 0.0;
 float nominal_current = 0.0;
-float voltage = 0.0;
 float current_readings[WINDOW_SIZE];
+float sensitivity = 0.066;
 
 char command = 's';
 char prev_command = 's'; 
@@ -31,8 +31,8 @@ void setup() {
   digitalWrite(relayA, LOW);
   digitalWrite(relayB, LOW);
   delay(500);
-  voltage = analogRead(currentSensorPin);
-  nominal_current = voltage * MAX_CURRENT / 1024.0;
+  // Считывание силы тока
+  nominal_current = analogRead(currentSensorPin) * (5 / 1023.0);
   Serial.begin(9600);
 
 }
@@ -42,8 +42,7 @@ void loop() {
   stateDOWN = digitalRead(downSwitchPin);
   stateUP = digitalRead(upSwitchPin);
   // Считывание силы тока
-  voltage = analogRead(currentSensorPin);
-  current = voltage * MAX_CURRENT / 1024.0;
+  current = analogRead(currentSensorPin) * (5 / 1023.0);
   // Комманда с компьютера
   if (Serial.available() > 0)
   {
@@ -52,13 +51,13 @@ void loop() {
     handleSerialCommand(command);
   }
   Serial.print("Nominal current: ");
-  Serial.print(nominal_current);
+  Serial.print(nominal_current, 3);
   Serial.println();
   Serial.print("Current: ");
-  Serial.print(current);
+  Serial.print(current, 3);
   Serial.println();
 // FAILURE DETECTION 
-  if (nominal_current - current >= 0.10){
+  if (nominal_current - current >= 0.015){
     Serial.println("Препядствие!!!");
     stopWindow();
     delay(100);
