@@ -14,8 +14,6 @@ int counter = 0;
 float current = 0.0;
 float nominal_current = 0.0;
 float current_readings[WINDOW_SIZE];
-float sensitivity = 0.066;
-
 char command = 's';
 char prev_command = 's'; 
 
