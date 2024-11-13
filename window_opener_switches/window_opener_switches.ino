@@ -3,17 +3,14 @@ const int upSwitchPin = 11;
 const int relayA = 8;    
 const int relayB = 9;  
 const int currentSensorPin = A0;
-const int WINDOW_SIZE = 5;
 const int DELAY_OBSTACLE_LOWERING_WINDOW = 500;
 const float MAX_CURRENT = 30.0; //Amps
-const float SLOPE_THRESHOLD = 0.04;
 
 int stateUP = 0;
 int stateDOWN = 0;
 int counter = 0;
 float current = 0.0;
-float nominal_current = 0.0;
-float current_readings[WINDOW_SIZE];
+float sensitivity = 0.066;
 char command = 's';
 char prev_command = 's'; 
 
@@ -28,9 +25,6 @@ void setup() {
   // Убедитесь что реле выключены во время стартапа
   digitalWrite(relayA, LOW);
   digitalWrite(relayB, LOW);
-  delay(500);
-  // Считывание силы тока
-  nominal_current = analogRead(currentSensorPin) * (5 / 1023.0);
   Serial.begin(9600);
 
 }
@@ -40,7 +34,7 @@ void loop() {
   stateDOWN = digitalRead(downSwitchPin);
   stateUP = digitalRead(upSwitchPin);
   // Считывание силы тока
-  current = analogRead(currentSensorPin) * (5 / 1023.0);
+  current = abs((analogRead(currentSensorPin) * (5 / 1023.0) - 2.5) / sensitivity);
   // Комманда с компьютера
   if (Serial.available() > 0)
   {
@@ -48,15 +42,12 @@ void loop() {
     // Serial.println(command);
     handleSerialCommand(command);
   }
-  Serial.print("Nominal current: ");
-  Serial.print(nominal_current, 3);
-  Serial.println();
-  Serial.print("Current: ");
+  Serial.print("current: ");
   Serial.print(current, 3);
   Serial.println();
 // FAILURE DETECTION 
-  if (nominal_current - current >= 0.015){
-    Serial.println("Препядствие!!!");
+  if (current >= 0.35){
+    Serial.println("Препядствие!");
     stopWindow();
     delay(100);
     lowerWindow();
